@@ -2,9 +2,11 @@ import React, { useContext } from 'react'
 import RowItemSingle from './rowItemSingle'
 import PageContent from './pageContent'
 import UserContext from '../utils/walletContext.js'
+import Transactions from './transactions'
+import * as Lib from '../utils/lib'
 
 export default function Dashboard() {
-    const { dispatch } = useContext(UserContext)
+    const { state, dispatch } = useContext(UserContext)
     return (
         <PageContent title="My account">
             <RowItemSingle>
@@ -19,6 +21,14 @@ export default function Dashboard() {
             <RowItemSingle cl="mt-10">
                 <button className='button mr-10' onClick={() => dispatch({ type: 'PAGE', param: 'transaction' })}>New Transaction</button>
                 <button className='button' onClick={() => dispatch({ type: 'PAGE', param: 'home' })}>Exit Wallet</button>
+            </RowItemSingle>
+            <RowItemSingle>
+                <legend>Last transactions</legend>
+                <Transactions />
+            </RowItemSingle>
+            <RowItemSingle>
+                <div><a href={Lib.etherscanUrlAcc(state.network, state.address)}
+                    rel="noopener noreferrer" target='_blank'>See the account in block explorer</a></div>
             </RowItemSingle>
         </PageContent>
     )

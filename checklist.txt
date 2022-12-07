@@ -1,3 +1,7 @@
+//- restore account by
+    //- password
+    //- private key
+    //- seed words
 - input validations and error messages
 - state with all wallet parameters
 - transaction list

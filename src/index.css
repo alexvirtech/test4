@@ -26,8 +26,8 @@ input{
 .font-18{
   font-size:18px;
 }
-.font-14{
-  font-size:14px;
+.font-12{
+  font-size:12px;
 }
 .font-bold{
   font-weight:bold;
@@ -48,4 +48,16 @@ input{
 
 .m-20{
   padding:20px;
+}
+
+.d-none{
+  display:none!important;
+}
+.d-block{
+  display:block!important;
+  width:100%!important;
+}
+
+.m-w-50{
+  max-width:50%!important;
 }
