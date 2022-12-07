@@ -7,7 +7,6 @@ import UserContext from '../utils/walletContext.js'
 export default function CreateNew() {
     const { dispatch } = useContext(UserContext)
     const validateAndExecute = (e) => {
-        // onClick={() => dispatch({ type: 'PAGE', param: 'created' })}
         e.preventDefault()
         console.log(e.target.name.value)
         const p =  {name:e.target.name.value, password: e.target.password.value }

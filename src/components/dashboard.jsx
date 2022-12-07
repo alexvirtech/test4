@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useContext, useEffect } from 'react'
 import RowItemSingle from './rowItemSingle'
 import PageContent from './pageContent'
 import UserContext from '../utils/walletContext.js'
@@ -11,7 +11,7 @@ export default function Dashboard() {
         <PageContent title="My account">
             <RowItemSingle>
                 <div className="float-left mr-10">Address: </div>
-                <div className="float-left font-bold text-primary">0xCB1B509b59a59B9f7fEF20864d9975Aedffe74EA</div>
+                <div className="float-left font-bold text-primary">{state.address}</div>
             </RowItemSingle>
             <RowItemSingle>
                 <div className="float-left mr-10">Balance: </div>

@@ -21,6 +21,8 @@ function App() {
     'password':<Password/>
   }
 
+  //Object.keys(localStorage).forEach(k=>console.log(k))
+
   const [state, dispatch] = useReducer(reducer,initState)
   return (
     <UserContext.Provider value={{state, dispatch}}>

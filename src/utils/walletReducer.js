@@ -1,15 +1,20 @@
 import * as Acc from './walletEthers.js'
 
+const initError = { er: false, tp: '', value: '', param: '', msg: '' }
+
 export const initState = {
     page: 'home',
     accessBy: 0, // 0 - password, 1 - private key, 2 - seed words
+    name: '',
     address: '',
     privateKey: '',
     mnemonic: '',
     network: 'goerli',
     coinSymbol: 'ETH',
     coinName: 'ethereum',
-    transactions: [] // temp
+    transactions: [],
+    error: { ...initError }
+    // temp
     /* {
         "value": "0.22",
         "from": "0x27fb2E72E4EA714a26FC32669E7DA6bb453d3060",
@@ -63,10 +68,71 @@ export const reducer = (state, action) => {
             localStorage[key] = enc
             return {
                 ...state,
+                name: key,
                 address: wallet.address,
                 privateKey: wallet.privateKey,
                 mnemonic: wallet.mnemonic.phrase,
                 page: 'created'
+            }
+        case 'EX_WALLET':
+            let ewallet, edec, etext, eenc, err
+            const epassword = action.param.password
+            const ekey = action.param.name
+            if (state.accessBy === 0) {
+                try {
+                    edec = localStorage[ekey]
+                    ewallet = JSON.parse(Acc.decWallet(edec, epassword))
+                } catch (e) {
+                    err =  { er: true, value: e, param: action.param, msg: 'access wallet by name/password error' }
+                    console.log(err)
+                    return {
+                        ...state,
+                        error: err
+                    }
+                }
+            } else if (state.accessBy === 1) {
+                try {
+                    const pkwallet = Acc.restoreWalletByPrivateKey(action.param.pk)
+                    ewallet = { privateKey: pkwallet.privateKey, address: pkwallet.address, name: ekey }
+                    etext = JSON.stringify(ewallet)
+                    eenc = Acc.encWallet(etext, epassword)
+                    localStorage[ekey] = eenc
+                } catch (e) {
+                    err =  { er: true, value: e, param:action.param, msg: 'access wallet by private key error' }
+                    console.log(err)
+                    return {
+                        ...state,
+                        error: err
+                    }
+                }
+            } else if (state.accessBy === 2) {
+                try {
+                    const mwallet = Acc.restoreWalletByMnemonic(action.param.mnemonic)
+                    ewallet = { privateKey: mwallet.privateKey, address: mwallet.address, name: ekey }
+                    etext = JSON.stringify(ewallet)
+                    eenc = Acc.encWallet(etext, epassword)
+                    localStorage[ekey] = eenc
+                } catch (e) {
+                    err =  { er: true, tp: 'EX_WALLET', value: e, param: action.param, msg: 'access wallet by mnemonic words error' }
+                    console.log(err)
+                    return {
+                        ...state,
+                        error: err
+                    }
+                }
+            }
+            return {
+                ...state,
+                name: key,
+                address: ewallet.address,
+                privateKey: ewallet.privateKey,
+                mnemonic: '',
+                page: 'dashboard'
+            }
+        case 'ERROR_CLEAR':
+            return {
+                ...state,
+                error: {...initError }
             }
         default:
             return state
