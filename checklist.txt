@@ -4,5 +4,5 @@
     //- seed words
 - input validations and error messages
 - state with all wallet parameters
-- transaction list
+//- transaction list
 - connect with api
