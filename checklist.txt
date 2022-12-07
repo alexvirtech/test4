@@ -1,0 +1,4 @@
+- input validations and error messages
+- state with all wallet parameters
+- transaction list
+- connect with api

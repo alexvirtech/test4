@@ -1,27 +1,34 @@
 import './Miligram.css'
-import React,{useState} from 'react'
-
+import React,{useReducer} from 'react'
+import {initState, reducer } from './utils/walletReducer'
+import UserContext from './utils/walletContext'
 import CreateNew from './components/createNew'
 import Dashboard from './components/dashboard'
 import Home from './components/home'
 import NewCreated from './components/newCreated'
+import NewTransaction from './components/newTransaction'
+import ConfirmTransaction from './components/confirmTransaction'
+import Password from './components/password'
 
 function App() {
-  const [state,setState] = useState({page: 'home'})
   const pages = {
-    'home': <Home cb={(p)=>setPage(p)}/>,
+    'home': <Home />, 
     'new': <CreateNew />,
     'created': <NewCreated />,
-    'dashboard':<Dashboard />
+    'dashboard':<Dashboard />,
+    'transaction':<NewTransaction/>,
+    'confirm':<ConfirmTransaction/>,
+    'password':<Password/>
   }
-  const setPage = (p)=>{
-    setState({...state,page:p})
-  }
+
+  const [state, dispatch] = useReducer(reducer,initState)
   return (
+    <UserContext.Provider value={{state, dispatch}}>
     <div className="App container">
         <h1>Ethereum Wallet</h1>
           {pages[state.page]}
     </div>
+    </UserContext.Provider>
   )
 }
 

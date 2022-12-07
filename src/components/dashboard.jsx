@@ -1,8 +1,10 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import RowItemSingle from './rowItemSingle'
 import PageContent from './pageContent'
+import UserContext from '../utils/walletContext.js'
 
 export default function Dashboard() {
+    const { dispatch } = useContext(UserContext)
     return (
         <PageContent title="My account">
             <RowItemSingle>
@@ -15,7 +17,8 @@ export default function Dashboard() {
                 <div className="float-left">Goerli ETH</div>
             </RowItemSingle>
             <RowItemSingle cl="mt-10">
-                <button className='button' href="#">New Transaction</button>
+                <button className='button mr-10' onClick={() => dispatch({ type: 'PAGE', param: 'transaction' })}>New Transaction</button>
+                <button className='button' onClick={() => dispatch({ type: 'PAGE', param: 'home' })}>Exit Wallet</button>
             </RowItemSingle>
         </PageContent>
     )

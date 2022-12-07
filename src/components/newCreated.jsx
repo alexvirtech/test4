@@ -1,8 +1,10 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import RowItemSingle from './rowItemSingle'
 import PageContent from './pageContent'
+import UserContext from '../utils/walletContext.js'
 
 export default function NewCreated() {
+    const { dispatch } = useContext(UserContext)
     return (
         <PageContent title="New account is created!">
             <RowItemSingle>
@@ -23,7 +25,7 @@ export default function NewCreated() {
             </RowItemSingle>
 
             <RowItemSingle cl="mt-10">
-                <button className='button' href="#">Close</button>
+                <button className='button' onClick={() => dispatch({ type: 'PAGE', param: 'dashboard' })}>Dashboard</button>
                 <div>Warning: <span className='text-danger'>save the mnemonic phrase before close!</span></div>
             </RowItemSingle>
         </PageContent>
