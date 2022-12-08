@@ -9,6 +9,7 @@ import NewCreated from './components/newCreated'
 import NewTransaction from './components/newTransaction'
 import ConfirmTransaction from './components/confirmTransaction'
 import Password from './components/password'
+//import {BackgroundWorker} from './utils/backgroundWorker'
 
 function App() {
   const pages = {
@@ -18,12 +19,12 @@ function App() {
     'dashboard':<Dashboard />,
     'transaction':<NewTransaction/>,
     'confirm':<ConfirmTransaction/>,
-    'password':<Password/>
+    'password': <Password/>
   }
 
-  //Object.keys(localStorage).forEach(k=>console.log(k))
-
   const [state, dispatch] = useReducer(reducer,initState)
+  //BackgroundWorker(state,dispatch)
+
   return (
     <UserContext.Provider value={{state, dispatch}}>
     <div className="App container">

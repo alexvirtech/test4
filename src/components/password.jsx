@@ -16,6 +16,11 @@ export default function Password() {
         dispatch({ type: 'EX_WALLET', param: p })
     }
 
+    useEffect(()=>{        
+        dispatch({ type: 'ACCESS', param: 0 })
+        Array.from(document.querySelector('form').elements).forEach(i=>i.value='')
+    },[])
+
     useEffect(()=>{
         if(state.error.er){
             setTimeout(()=>{
@@ -33,20 +38,20 @@ export default function Password() {
             </RowItemSingle>
             <RowItemSingle cl={state.accessBy !== 1 ? 'd-none' : 'd-block'}>
                 <legend>Account private key</legend>
-                <input type="text" placeholder="enter the private key" id="privateKey" />
+                <input type="text" placeholder="enter the private key" name="privateKey" required={state.accessBy===1}/>
             </RowItemSingle>
             <RowItemSingle cl={state.accessBy !== 2 ? 'd-none' : 'd-block'}>
                 <legend>Seed words (12)</legend>
-                <input type="text" placeholder="enter the seed words" id="mnemonic" />
+                <input type="text" placeholder="enter the seed words" name="mnemonic" required={state.accessBy===2}/>
             </RowItemSingle>
             <RowItemCustom>
                 <div className="column column-50">
                     <legend>Account password</legend>
-                    <input type="password" placeholder="enter the password" id="password" />
+                    <input type="password" placeholder="enter the password" name="password" required/>
                 </div>
-                <div className={'column column-50'}> {/* + (state.accessBy !== 1 ? 'd-none' : 'd-block') */}
+                <div className={'column column-50'}> 
                     <legend>Account name</legend>
-                    <input type="text" placeholder="enter a nick name for this account" id="name" />
+                    <input type="text" placeholder="enter a nick name for this account" name="name" required/>
                 </div>
             </RowItemCustom>
             <RowItemSingle cl="mt-10">

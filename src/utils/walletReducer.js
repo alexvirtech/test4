@@ -1,55 +1,42 @@
 import * as Acc from './walletEthers.js'
 
-const initError = { er: false, tp: '', value: '', param: '', msg: '' }
+const initError = {
+    er: false,
+    tp: '',
+    value: '',
+    param: '',
+    msg: ''
+}
+
+const initTransaction = {
+    recepient: '',
+    amount: 0
+}
 
 export const initState = {
-    page: 'home',
-    accessBy: 0, // 0 - password, 1 - private key, 2 - seed words
+    page: 'home',   // new, created, dashboard, transaction, confirm, password
+    accessBy: 0,    // 0 - password, 1 - private key, 2 - seed words
     name: '',
-    address: '',
+    address: '',    // account name
     privateKey: '',
+    password: '',
     mnemonic: '',
     network: 'goerli',
     coinSymbol: 'ETH',
     coinName: 'ethereum',
+    balance: 0,
+    price: 0,
     transactions: [],
+    newTransaction: { ...initTransaction },
+    interval: null,
     error: { ...initError }
-    // temp
-    /* {
-        "value": "0.22",
-        "from": "0x27fb2E72E4EA714a26FC32669E7DA6bb453d3060",
-        "to": "0xCB1B509b59a59B9f7fEF20864d9975Aedffe74EA",
-        "time": 1669915164,
-        "hash": "0xac1a3d06fdf856d2144038515858592faffe42d6cfd82df4615e974cdcbe1737"
-    },
-    {
-        "value": "0.2",
-        "from": "0xCB1B509b59a59B9f7fEF20864d9975Aedffe74EA",
-        "to": "0x27fb2E72E4EA714a26FC32669E7DA6bb453d3060",
-        "time": 1669915008,
-        "hash": "0xf6b2e201ce6f18ba67ff89e435db7e421a921dd5f70ab000ddcd20c4bf0f9ced"
-    },
-    {
-        "value": "0.2",
-        "from": "0x27fb2E72E4EA714a26FC32669E7DA6bb453d3060",
-        "to": "0xCB1B509b59a59B9f7fEF20864d9975Aedffe74EA",
-        "time": 1669909128,
-        "hash": "0xc9649e85c942202a8a5429bdd315aadb37edc995674f56c626f2bc075b43a438"
-    },
-    {
-        "value": "0.2",
-        "from": "0x27fb2E72E4EA714a26FC32669E7DA6bb453d3060",
-        "to": "0xCB1B509b59a59B9f7fEF20864d9975Aedffe74EA",
-        "time": 1669907784,
-        "hash": "0xed4bd877879b86bd2bb171fbe9081674169793bac1ece84805264b46c502baa2"
-    }
-] */
-
 }
 
 export const reducer = (state, action) => {
     switch (action.type) {
         case "PAGE":
+            //console.log(action.param)     
+            //alert(action.param)         
             return {
                 ...state,
                 page: action.param
@@ -83,7 +70,7 @@ export const reducer = (state, action) => {
                     edec = localStorage[ekey]
                     ewallet = JSON.parse(Acc.decWallet(edec, epassword))
                 } catch (e) {
-                    err =  { er: true, value: e, param: action.param, msg: 'access wallet by name/password error' }
+                    err = { er: true, value: e, param: action.param, msg: 'access wallet by name/password error' }
                     console.log(err)
                     return {
                         ...state,
@@ -98,7 +85,7 @@ export const reducer = (state, action) => {
                     eenc = Acc.encWallet(etext, epassword)
                     localStorage[ekey] = eenc
                 } catch (e) {
-                    err =  { er: true, value: e, param:action.param, msg: 'access wallet by private key error' }
+                    err = { er: true, value: e, param: action.param, msg: 'access wallet by private key error' }
                     console.log(err)
                     return {
                         ...state,
@@ -113,7 +100,7 @@ export const reducer = (state, action) => {
                     eenc = Acc.encWallet(etext, epassword)
                     localStorage[ekey] = eenc
                 } catch (e) {
-                    err =  { er: true, tp: 'EX_WALLET', value: e, param: action.param, msg: 'access wallet by mnemonic words error' }
+                    err = { er: true, tp: 'EX_WALLET', value: e, param: action.param, msg: 'access wallet by mnemonic words error' }
                     console.log(err)
                     return {
                         ...state,
@@ -123,18 +110,50 @@ export const reducer = (state, action) => {
             }
             return {
                 ...state,
-                name: key,
+                name: ekey,
                 address: ewallet.address,
                 privateKey: ewallet.privateKey,
                 mnemonic: '',
                 page: 'dashboard'
             }
+        case 'BALANCE':
+            return {
+                ...state,
+                balance: action.param
+            }
+        case 'PRICE':
+            return {
+                ...state,
+                price: action.param
+            }
+        case 'TRANSACTIONS':
+            return {
+                ...state,
+                transactions: action.param
+            }
+        case 'SET_NEW_TRANSACTION':
+            return {
+                ...state,
+                page: 'confirm',
+                newTransaction: action.param
+            }       
+        case 'NEW_TRANSACTION_CLEAR':
+            return {
+                ...state,
+                newTransaction: { ...initTransaction }
+            }        
+        case 'SET_ERROR':
+            return {
+                ...state,
+                error: { er: true, tp: 'SET_ERROR', msg: action.param }
+            }
         case 'ERROR_CLEAR':
             return {
                 ...state,
-                error: {...initError }
-            }
+                error: { ...initError }
+            }        
         default:
+            console.log(state)
             return state
     }
 }

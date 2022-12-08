@@ -17,9 +17,9 @@ export default function Transactions() {
                 </thead>
                 <tbody>
                     {
-                        state.transactions.map(t => {
+                        state.transactions.map((t,i) => {
                             return (
-                                <tr>
+                                <tr key={i}>
                                     <td>{t.to === state.address ? 'in' : 'out'}</td>
                                     <td>{t.value}</td>
                                     <td>{Lib.unixToDate(t.time)}</td>

@@ -1,8 +1,6 @@
-//- restore account by
-    //- password
-    //- private key
-    //- seed words
+********** 08/12/22 **********
 - input validations and error messages
 - state with all wallet parameters
-//- transaction list
-- connect with api
+- balance
+- transaction list
+- execute transaction

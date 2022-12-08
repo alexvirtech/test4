@@ -41,14 +41,12 @@ export const getBalance = async (address, network) => {
 
 // sign and send signed transaction
 export const sendTransaction = async (network, privatekey, recepient, value) => {
-    //let privatekey = process.env.REACT_APP_PK  
     const wallet = new ethers.Wallet(privatekey)
     const provider = getProvider(network)
     const feeData = await provider.getFeeData()
 
-    //console.log('Using wallet address ' + wallet.address)
     // nonce
-    const n = await provider.getTransactionCount(wallet.address)
+    const n = await provider.getTransactionCount(wallet.address)    
     //console.log('nonce', n)
 
     let transaction = {
@@ -68,12 +66,20 @@ export const sendTransaction = async (network, privatekey, recepient, value) => 
     return trh
 }
 
-export const getLastTransactions = async (network, address) => {
+export const transactionFee = async (network) => {
+    const provider = getProvider(network)
+    const feeData = await provider.getFeeData()
+    const limit = 21000
+    const com = ethers.utils.formatEther(feeData.gasPrice * limit)
+    return {gasPrice: parseInt(JSON.parse(JSON.stringify(feeData.gasPrice)).hex),gasLimit: limit, com: com } // temp
+}
+
+export const getLastTransactions = async (network, address) => {    
     let provider = new ethers.providers.EtherscanProvider(network,process.env.REACT_APP_ETHERSCAN_API_KEY)
     let history = await provider.getHistory(address)
     //return history
     // prepare to the link list
-    const transactions = history.slice(0,4).map(h=>{
+    const transactions = history.map(h=>{
         return {
             value: ethers.utils.formatEther(h.value),
             from: h.from,
@@ -81,18 +87,15 @@ export const getLastTransactions = async (network, address) => {
             time: h.timestamp,
             hash: h.hash
         }
-    }).sort((a,b)=>b.time-a.time)
+    }).sort((a,b)=>b.time-a.time).slice(0,5)
     return transactions    
 }
 
 export const getPrice = async (coin='ethereum') => {
-    //console.log('started')
-    //return 1
-    //https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd
     const url = `https://api.coingecko.com/api/v3/simple/price?ids=${coin}&vs_currencies=usd`
     const response = await fetch(url)
-    console.log(response)
+    //console.log(response)
     const d = await response.json()
-    console.log(JSON.stringify(d))
+    //console.log(JSON.stringify(d))
     return d[coin].usd 
 }
